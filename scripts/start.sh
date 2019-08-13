@@ -1,10 +1,12 @@
 #!/bin/bash
+DIR="./config"
 echo 'Criando diretórios para arquivos de configuração'
-mkdir -p "./config"
+mkdir -p $DIR
+echo 'Entrando diretório de arquivos de configuração'
+cd $DIR
+echo `pwd`
 echo 'Criando Cluster atomix'
 echo 'Criando arquivos de configuração do cluster'
-
-
 VAR=""
 for i in $(seq 1 $1)
 do
@@ -51,4 +53,11 @@ partition-groups.raft {
   members: [$VAR]
 } " >> "atomix-$i.conf"
 done
-# sudo docker run --net rede-onos --ip 172.18.0.2 -it --name atomix1 --hostname atomix-1 -v caminho_para_o_arquivo_atomix https://atomix.io/1:/etc/atomix/conf atomix/atomix:3.0.7 --config /etc/atomix/conf/atomix.conf --ignore-resources
+
+echo "Deixando o diretório de arquivos de configuração"
+cd "../"
+echo `pwd`
+
+echo "Executando intâncias de cluster atomix"
+
+gnome-terminal -e "bash -c \"sudo docker rm atomix1;sudo docker run -it --net rede-onos --ip 172.18.0.2 --name atomix1 --hostname atomix-1 -v /home/wilker/Documentos/git/mestrado/conf/atomix.conf:/etc/atomix/conf/atomix.conf atomix/atomix:3.0.7 --config /etc/atomix/conf/atomix.conf --ignore-resources; exec bash\""
