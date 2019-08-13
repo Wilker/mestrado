@@ -15,7 +15,7 @@ do
   cluster-id: onos
   node {
     id: biscoito-$i
-    address: "172.21.0.`expr $i + 1`:5679"
+    address: \"172.21.0.`expr $i + 1`:5679\"
   }
   discovery {
     type: bootstrap" > "atomix-$i.conf"
@@ -30,7 +30,7 @@ do
     fi
     echo "      nodes.$j {
       id: biscoito-$j
-      address: "172.21.0.`expr $j + 2`:5679"
+      address:  \"172.21.0.`expr $j + 2`:5679\"
     }" >> "atomix-$i.conf"
 done
 
@@ -57,7 +57,9 @@ done
 echo "Deixando o diretório de arquivos de configuração"
 cd "../"
 echo `pwd`
-
+DIR=`pwd`
+echo $DIR
 echo "Executando intâncias de cluster atomix"
 
-gnome-terminal -e "bash -c \"sudo docker rm atomix1;sudo docker run -it --net rede-onos --ip 172.18.0.2 --name atomix1 --hostname atomix-1 -v /home/wilker/Documentos/git/mestrado/conf/atomix.conf:/etc/atomix/conf/atomix.conf atomix/atomix:3.0.7 --config /etc/atomix/conf/atomix.conf --ignore-resources; exec bash\""
+
+gnome-terminal -e "bash -c \"sudo docker rm atomix1;sudo docker run -it --net rede-onos --ip 172.18.0.2 --name atomix1 --hostname atomix-1 -v $DIR/config/atomix-1.conf:/etc/atomix/conf/atomix.conf atomix/atomix:3.0.7 --config /etc/atomix/conf/atomix.conf --ignore-resources; exec bash\""
