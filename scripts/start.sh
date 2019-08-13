@@ -1,6 +1,12 @@
 #!/bin/bash
+echo 'Criando diretórios para arquivos de configuração'
+mkdir -p "./config"
 echo 'Criando Cluster atomix'
 echo 'Criando arquivos de configuração do cluster'
+
+
+
+echo `pwd`
 VAR=""
 for i in $(seq 1 $1)
 do
@@ -48,3 +54,5 @@ partition-groups.raft {
 } " >> "atomix-$i.conf"
 done
 # sudo docker run --net rede-onos --ip 172.18.0.2 -it --name atomix1 --hostname atomix-1 -v caminho_para_o_arquivo_atomix https://atomix.io/1:/etc/atomix/conf atomix/atomix:3.0.7 --config /etc/atomix/conf/atomix.conf --ignore-resources
+
+echo `pwd`
