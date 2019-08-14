@@ -61,5 +61,12 @@ DIR=`pwd`
 echo $DIR
 echo "Executando intâncias de cluster atomix"
 
-
-gnome-terminal -e "bash -c \"sudo docker rm atomix1;sudo docker run -it --net rede-onos --ip 172.18.0.2 --name atomix1 --hostname atomix-1 -v $DIR/config/atomix-1.conf:/etc/atomix/conf/atomix.conf atomix/atomix:3.0.7 --config /etc/atomix/conf/atomix.conf --ignore-resources; exec bash\""
+for i in $(seq 1 $1)
+do 
+  CMD="sudo docker run -it --net rede-onos --ip 172.18.0.`expr $i + 1` --name atomix$i --hostname atomix-$i -v $DIR/config/atomix-$i.conf:/etc/atomix/conf/atomix.conf atomix/atomix:3.0.7 --config /etc/atomix/conf/atomix.conf --ignore-resources"
+  gnome-terminal -e "bash -c 
+  \"sudo docker rm atomix$i;
+  echo -e '$CMD';
+  $CMD;
+  exec bash\""
+done
