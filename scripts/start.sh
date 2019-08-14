@@ -15,7 +15,7 @@ do
   cluster-id: onos
   node {
     id: biscoito-$i
-    address: \"172.21.0.`expr $i + 1`:5679\"
+    address: \"172.18.0.`expr $i + 1`:5679\"
   }
   discovery {
     type: bootstrap" > "atomix-$i.conf"
@@ -30,7 +30,7 @@ do
     fi
     echo "      nodes.$j {
       id: biscoito-$j
-      address:  \"172.21.0.`expr $j + 2`:5679\"
+      address: \"172.18.0.`expr $j + 1`:5679\"
     }" >> "atomix-$i.conf"
 done
 
