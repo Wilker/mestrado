@@ -10,7 +10,7 @@ echo 'Criando arquivos de configuração do cluster'
 VAR=""
 for i in $(seq 1 $1)
 do
-
+VAR=""
     echo "cluster {
   cluster-id: onos
   node {
@@ -24,7 +24,7 @@ VAR="${VAR}biscoito-1"
 
 for j in $(seq 1 $1)
 do 
-    if [ $1 -gt 1 ] && [ $j -lt `expr $1 - 1` ]
+    if [ $1 -gt 1 ] && [ $j -lt `expr $1` ]
     then
             VAR="${VAR},biscoito-`expr $j + 1`"
     fi
@@ -56,7 +56,6 @@ done
 
 echo "Deixando o diretório de arquivos de configuração"
 cd "../"
-echo `pwd`
 DIR=`pwd`
 echo $DIR
 echo "Executando intâncias de cluster atomix"
