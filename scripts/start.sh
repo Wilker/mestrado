@@ -67,41 +67,52 @@ do
   \"name\": \"onos\",
   \"node\": {
     \"id\": \"onos-$i\",
-    \"ip\": \"172.21.0.`expr $i + $1 + 1`\",
+    \"ip\": \"172.18.0.`expr $i + $1 + 1`\",
     \"port\": 9876
   },
-  \"storage\": [" > "onos-$i.conf"
+  \"storage\": [" > "onos-$i.json"
     for j in $(seq 1 $1)
     do
     echo "    {
       \"id\": \"biscoito-$j\",
-      \"ip\": \"172.21.0.`expr $j + 1`\",
-      \"port\": \"5679\"" >> "onos-$i.conf"
+      \"ip\": \"172.18.0.`expr $j + 1`\",
+      \"port\": \"5679\"" >> "onos-$i.json"
   
     if [ $j -lt $1 ]
     then
-    echo "    }," >> "onos-$i.conf"
+    echo "    }," >> "onos-$i.json"
     else
-    echo "    }" >> "onos-$i.conf"
+    echo "    }" >> "onos-$i.json"
     fi
     done
     echo "  ]
-}" >> "onos-$i.conf"
+}" >> "onos-$i.json"
 done
 
-# echo "Deixando o diretório de arquivos de configuração"
-# cd "../"
-# DIR=`pwd`
-# echo $DIR
-# echo "Executando intâncias de cluster atomix"
+echo "Deixando o diretório de arquivos de configuração"
+cd "../"
+DIR=`pwd`
+echo $DIR
+echo "Executando intâncias de cluster atomix"
 
-# for i in $(seq 1 $1)
-# do 
-#   CMD="sudo docker run -it --net rede-onos --ip 172.18.0.`expr $i + 1` --name atomix$i --hostname atomix-$i -v $DIR/config/atomix-$i.conf:/etc/atomix/conf/atomix.conf atomix/atomix:3.0.7 --config /etc/atomix/conf/atomix.conf --ignore-resources"
-#   gnome-terminal -e "bash -c 
-#   \"sudo docker rm atomix$i;
-#   echo -e '$CMD';
-#   $CMD;
-#   exec bash\""
-# done
+for i in $(seq 1 $1)
+do 
+  CMD="sudo docker run -it --net rede-onos --ip 172.18.0.`expr $i + 1` --name atomix$i --hostname atomix-$i -v $DIR/.config/atomix-$i.conf:/etc/atomix/conf/atomix.conf atomix/atomix:3.1.0 --config /etc/atomix/conf/atomix.conf --ignore-resources"
+  gnome-terminal -e "bash -c 
+  \"sudo docker rm atomix$i;
+  echo -e '$CMD';
+  $CMD;
+  exec bash\""
+done
+
+echo "Executando intâncias de cluster ONOS"
+for i in $(seq 1 $1)
+do 
+  CMD="sudo docker run -it --net rede-onos --ip 172.18.0.`expr $i + $1 + 1` --name onos$i --hostname onos-$i -v $DIR/.config/onos-$i.json:/root/onos/config/cluster.json onosproject/onos:2.1.0"
+  gnome-terminal -e "bash -c 
+  \"sudo docker rm onos$i;
+  echo -e '$CMD';
+  $CMD;
+  exec bash\""
+done
 
