@@ -142,7 +142,7 @@ def myNetwork():
   do
   echo "    c$i=net.addController(name='c$i',
                       controller=RemoteController,
-                      ip='172.18.0.`expr $i + $1`',
+                      ip='172.18.0.`expr $i + $1 + 1`',
                       protocol='tcp',
                       port=6653)
   " >> myTopology.py
