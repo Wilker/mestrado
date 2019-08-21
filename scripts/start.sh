@@ -212,3 +212,8 @@ CMD="sudo python myTopology.py"
   echo -e '$CMD';
   $CMD;
   exec bash\""
+
+
+echo "Abrindo controlador"
+xdg-open http://172.18.0.`expr $1 + 2`:8181/onos/ui/index.html
+
