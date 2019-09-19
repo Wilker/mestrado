@@ -201,14 +201,22 @@ if __name__ == '__main__':
     myNetwork()" >> myTopology.py
 
 
-echo "Iniciando Mininet"
+echo "Iniciando CLI onos em onos1"
 echo "."
 echo "."
 echo "."
 
-CMD="sudo python myTopology.py"
-  gnome-terminal -e "bash -c 
-  \"sudo docker rm onos$i;
-  echo -e '$CMD';
-  $CMD;
-  exec bash\""
+CMD="sudo docker exec -it onos1 bash -c \"~/onos/apache-karaf-4.2.3/bin/client\""
+gnome-terminal -e "bash -c 
+\"echo -e 'Aguardando contêiner docker';
+sleep 60;
+echo -e '$CMD';
+$CMD;
+exec bash\""
+
+echo "Iniciando Mininet"
+echo "."
+echo "."
+echo "."
+sudo python myTopology.py
+
