@@ -135,7 +135,7 @@ def myNetwork():
 
     net = Mininet( topo=None,
                    build=False,
-                   ipBase='10.0.0.0/8')
+                   ipBase='172.18.0.0/16')
 
     info( '*** Adding controllers\n' )" > myTopology.py
   for i in $(seq 1 $1)
@@ -164,8 +164,8 @@ def myNetwork():
     s4 = net.addSwitch('s4', cls=OVSKernelSwitch)
 
     info( '*** Add hosts\n')
-    h1 = net.addHost('h1', cls=Host, ip='10.0.0.2', defaultRoute=None)
-    h2 = net.addHost('h2', cls=Host, ip='10.0.0.3', defaultRoute=None)
+    h1 = net.addHost('h1', cls=Host, ip='172.18.0.10', defaultRoute=None)
+    h2 = net.addHost('h2', cls=Host, ip='172.18.0.11', defaultRoute=None)
 
     info( '*** Add links\n')
     net.addLink(h1, s1)
