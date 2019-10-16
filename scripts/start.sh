@@ -166,10 +166,14 @@ def myNetwork():
     info( '*** Add hosts\n')
     h1 = net.addHost('h1', cls=Host, ip='172.18.0.10', defaultRoute=None)
     h2 = net.addHost('h2', cls=Host, ip='172.18.0.11', defaultRoute=None)
+    h3 = net.addHost('h3', cls=Host, ip='172.18.0.12', defaultRoute=None)
+    h4 = net.addHost('h4', cls=Host, ip='172.18.0.13', defaultRoute=None)
 
     info( '*** Add links\n')
     net.addLink(h1, s1)
     net.addLink(h2, s4)
+    net.addLink(h3, s3)
+    net.addLink(h4, s2)
 
     net.addLink(s1, s2)
     net.addLink(s1, s3)
