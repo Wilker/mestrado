@@ -197,6 +197,8 @@ def myNetwork():
 
     info( '*** Post configure switches and hosts\n')
 
+    net.pingAll()
+    
     CLI(net)
     net.stop()
 
