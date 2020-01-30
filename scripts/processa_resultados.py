@@ -29,8 +29,15 @@ def is_master(pcap):
     os.remove("{}_master_test".format(pcap))
     return True if total_lines > 0 else False
 
-def last_packet_out(pcap):
-    cmd = "tshark -2 -r {} -R '{}' > {}_master_test".format(pcap, ROLE_REQUEST, pcap)
+def get_last_packet_out(pcap):
+    cmd = "tshark -2 -r {} -R '{}' > {}_packets_out".format(pcap, PACKET_OUT, pcap)
+    os.system(cmd)
+    with open("{}_packets_out".format(pcap), "r") as file:
+        last_packet = ''
+        for lines in file:
+            last_packet = lines
+    os.remove("{}_packets_out".format(pcap))
+    return last_packet
 
 if __name__ == "__main__":
     main()
