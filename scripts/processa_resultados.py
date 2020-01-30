@@ -6,8 +6,8 @@ PACKET_IN = '(openflow_v5.type == 10)'
 PACKET_OUT = '(openflow_v5.type == 13)'
 ROLE_REQUEST = '(openflow_v5.type == 24)'
 ROLE_REPLY = '(openflow_v5.type == 25)'
-MULTIPART_REQUEST = '(openflow_v5.type == 25)'
-MULTIPART_REPLY = '(openflow_v5.type == 25)'
+MULTIPART_REQUEST = '(openflow_v5.type == 18)'
+MULTIPART_REPLY = '(openflow_v5.type == 19)'
 
 def main():
     if len(sys.argv) < 2:
@@ -51,6 +51,13 @@ def get_first_multipart_request(pcap):
     os.system(cmd)
     line = open("{}_multipart_request".format(pcap), "r").readline()
     os.remove("{}_multipart_request".format(pcap))
+    return line
+
+def get_first_multipart_reply(pcap):
+    cmd = "tshark -2 -r {} -R '{}' > {}_multipart_reply".format(pcap, MULTIPART_REPLY, pcap)
+    os.system(cmd)
+    line = open("{}_multipart_reply".format(pcap), "r").readline()
+    os.remove("{}_multipart_reply".format(pcap))
     return line
 
 if __name__ == "__main__":
