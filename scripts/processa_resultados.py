@@ -26,6 +26,7 @@ def is_master(pcap):
         total_lines = 0
         for lines in file:
             total_lines +=1
+    os.remove("{}_master_test".format(pcap))
     return True if total_lines > 0 else False
 
 
