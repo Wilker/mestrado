@@ -3,7 +3,7 @@ import os
 import subprocess
 
 PACKET_IN = '(openflow_v5.type == 10)'
-PACKET_OUT = '(openflow_v5.type == 14)'
+PACKET_OUT = '(openflow_v5.type == 13)'
 ROLE_REQUEST = '(openflow_v5.type == 24)'
 ROLE_REPLY = '(openflow_v5.type == 25)'
 MULTIPART_REQUEST = '(openflow_v5.type == 25)'
@@ -29,6 +29,8 @@ def is_master(pcap):
     os.remove("{}_master_test".format(pcap))
     return True if total_lines > 0 else False
 
+def last_packet_out(pcap):
+    cmd = "tshark -2 -r {} -R '{}' > {}_master_test".format(pcap, ROLE_REQUEST, pcap)
 
 if __name__ == "__main__":
     main()
