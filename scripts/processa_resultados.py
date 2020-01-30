@@ -39,5 +39,11 @@ def get_last_packet_out(pcap):
     os.remove("{}_packets_out".format(pcap))
     return last_packet
 
+def get_first_role_request(pcap):
+    cmd = "tshark -2 -r {} -R '{}' > {}_role_request".format(pcap, ROLE_REQUEST, pcap)
+    os.system(cmd)
+    with open("{}_role_request".format(pcap), "r") as file:
+        return file.readline()
+
 if __name__ == "__main__":
     main()
