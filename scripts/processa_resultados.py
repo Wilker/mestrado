@@ -60,5 +60,12 @@ def get_first_multipart_reply(pcap):
     os.remove("{}_multipart_reply".format(pcap))
     return line
 
+def get_first_packet_out(pcap):
+    cmd = "tshark -2 -r {} -R '{}' > {}_packet_out".format(pcap, PACKET_OUT, pcap)
+    os.system(cmd)
+    line = open("{}_packet_out".format(pcap), "r").readline()
+    os.remove("{}_packet_out".format(pcap))
+    return line
+
 if __name__ == "__main__":
     main()
