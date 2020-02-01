@@ -1,5 +1,6 @@
 import os
 import sys
+import numpy as np
 
 PACKET_IN = '(openflow_v5.type == 10)'
 PACKET_OUT = '(openflow_v5.type == 13)'
@@ -28,11 +29,10 @@ def process_folder(folder, writable):
     print(os.getcwd())
     master, slave = get_master_and_slave(pcaps)
     base_time = get_time(0, get_last_packet_out(master))
-    writable.write('{}\n'.format(base_time - base_time))
-    writable.write('{}\n'.format(get_time(base_time, get_first_role_request(slave))))
-    writable.write('{}\n'.format(get_time(base_time, get_first_role_reply(slave))))
-    writable.write('{}\n'.format(get_time(base_time, get_first_multipart_request(slave))))
-    writable.write('{}\n'.format(get_time(base_time, get_first_multipart_reply(slave))))
+    writable.write('{},'.format(get_time(base_time, get_first_role_request(slave))))
+    writable.write('{},'.format(get_time(base_time, get_first_role_reply(slave))))
+    writable.write('{},'.format(get_time(base_time, get_first_multipart_request(slave))))
+    writable.write('{},'.format(get_time(base_time, get_first_multipart_reply(slave))))
     writable.write('{}\n'.format(get_time(base_time, get_first_packet_out(slave))))
     os.chdir('..')
 
@@ -116,10 +116,15 @@ def extract_results(path_to_folder):
     os.chdir(path_to_folder)
     folder = os.getcwd().split("/")[-1]
     subfolders = [f.path for f in os.scandir('.') if f.is_dir()]
-    with open("results-{}-test.txt".format(folder), 'w') as file:
+    with open("results-{}-test.csv".format(folder), 'w') as file:
         for subfolder in subfolders:
-            file.write(subfolder+'\n')
+            #file.write(subfolder+'\n')
             process_folder(subfolder, file)
+    print(get_mean(file.name))
+
+
+def get_mean(file):
+    return np.loadtxt(file, delimiter=',').mean(axis=0)
 
 
 if __name__ == "__main__":
