@@ -17,8 +17,8 @@ def main():
     extract_results(root)
 
 
-def get_time(line):
-    return line.split()[1]
+def get_time(base_time, line):
+    return float(line.split()[1]) - base_time
 
 
 def process_folder(folder, writable):
@@ -27,12 +27,13 @@ def process_folder(folder, writable):
     os.chdir(folder)
     print(os.getcwd())
     master, slave = get_master_and_slave(pcaps)
-    writable.write(get_time(get_last_packet_out(master))+'\n')
-    writable.write(get_time(get_first_role_request(slave))+'\n')
-    writable.write(get_time(get_first_role_reply(slave))+'\n')
-    writable.write(get_time(get_first_multipart_request(slave))+'\n')
-    writable.write(get_time(get_first_multipart_reply(slave))+'\n')
-    writable.write(get_time(get_first_packet_out(slave))+'\n')
+    base_time = get_time(0, get_last_packet_out(master))
+    writable.write('{}\n'.format(base_time - base_time))
+    writable.write('{}\n'.format(get_time(base_time, get_first_role_request(slave))))
+    writable.write('{}\n'.format(get_time(base_time, get_first_role_reply(slave))))
+    writable.write('{}\n'.format(get_time(base_time, get_first_multipart_request(slave))))
+    writable.write('{}\n'.format(get_time(base_time, get_first_multipart_reply(slave))))
+    writable.write('{}\n'.format(get_time(base_time, get_first_packet_out(slave))))
     os.chdir('..')
 
 def get_master_and_slave(pcaps):
