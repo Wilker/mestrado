@@ -1,6 +1,5 @@
-import sys
 import os
-import subprocess
+import sys
 
 PACKET_IN = '(openflow_v5.type == 10)'
 PACKET_OUT = '(openflow_v5.type == 13)'
@@ -15,20 +14,36 @@ def main():
         print("Wrong number of args")
         return
     root = sys.argv[1]
+    extract_results(root)
 
 
-def process_folder(folder):
+def get_time(line):
+    return line.split()[1]
+
+
+def process_folder(folder, writable):
     onlyfiles = [f for f in os.listdir(folder) if os.path.isfile(os.path.join(folder, f))]
     pcaps = list(filter(lambda k: 'pcap' in k, onlyfiles))
-    master = get_master(pcaps)
-    print(master)
+    os.chdir(folder)
+    print(os.getcwd())
+    master, slave = get_master_and_slave(pcaps)
+    writable.write(get_time(get_last_packet_out(master))+'\n')
+    writable.write(get_time(get_first_role_request(slave))+'\n')
+    writable.write(get_time(get_first_role_reply(slave))+'\n')
+    writable.write(get_time(get_first_multipart_request(slave))+'\n')
+    writable.write(get_time(get_first_multipart_reply(slave))+'\n')
+    writable.write(get_time(get_first_packet_out(slave))+'\n')
+    os.chdir('..')
 
-def get_master(pcaps):
+def get_master_and_slave(pcaps):
     master = ''
+    slave = ''
     for pcap in pcaps:
         if is_master(pcap):
             master = pcap
-    return master
+        else:
+            slave = pcap
+    return (master, slave)
 
 
 def is_master(pcap):
@@ -39,7 +54,7 @@ def is_master(pcap):
         for lines in file:
             total_lines += 1
     os.remove("{}_master_test".format(pcap))
-    return True if total_lines > 0 else False
+    return False if total_lines > 0 else True
 
 
 def get_last_packet_out(pcap):
@@ -58,6 +73,14 @@ def get_first_role_request(pcap):
     os.system(cmd)
     line = open("{}_role_request".format(pcap), "r").readline()
     os.remove("{}_role_request".format(pcap))
+    return line
+
+
+def get_first_role_reply(pcap):
+    cmd = "tshark -2 -r {} -R '{}' > {}_role_reply".format(pcap, ROLE_REPLY, pcap)
+    os.system(cmd)
+    line = open("{}_role_reply".format(pcap), "r").readline()
+    os.remove("{}_role_reply".format(pcap))
     return line
 
 
@@ -88,12 +111,14 @@ def get_first_packet_out(pcap):
 '''Expects tests root folder'''
 
 
-def extract_results():
+def extract_results(path_to_folder):
+    os.chdir(path_to_folder)
     folder = os.getcwd().split("/")[-1]
     subfolders = [f.path for f in os.scandir('.') if f.is_dir()]
-    with open("result-{}".format(folder), 'w') as file:
+    with open("results-{}-test.txt".format(folder), 'w') as file:
         for subfolder in subfolders:
-            process_folder(subfolder)
+            file.write(subfolder+'\n')
+            process_folder(subfolder, file)
 
 
 if __name__ == "__main__":
