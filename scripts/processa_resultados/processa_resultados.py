@@ -18,7 +18,7 @@ def main():
 
 
 def get_time(base_time, line):
-    return float(line.split()[1]) - base_time
+    return round(float(line.split()[1]) - base_time,6)
 
 
 def process_folder(folder, writable):
