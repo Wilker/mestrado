@@ -17,14 +17,14 @@ log(){
 
 
 #CMD="ssh wilker@'$C1 ./init_test.sh'"
-CMD="ssh wilker@$SERVER whoami"
+CMD=ssh wilker@$SERVER whoami
 
-open -a Terminal -e "bash -c 
+gnome-terminal -e "bash -c
 \"$(log 'Conectando ao servidor');
 $(log 'Iniciando testes');
 echo -e '$CMD';
-$CMD;\""
-
+$CMD;
+exec bash\""
 
 
 # ssh wilker@'$C1 ./init_test.sh'  
