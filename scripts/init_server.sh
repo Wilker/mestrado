@@ -7,7 +7,9 @@ log() {
 
 # iniciar atomix
 start_atomix() {
-  $(log 'Conectando ao servidor')
-  cd ~/Documents/atomix/
+  log 'Conectando ao servidor'
+  cd ~/Documentos/atomix/
   ./bin/atomix-agent >log.txt
 }
+
+start_atomix
