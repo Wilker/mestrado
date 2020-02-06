@@ -1,7 +1,9 @@
 #!/bin/bash
+C1='192.168.2.11'
+C2='192.168.2.12'
 
 log() {
-  date +%s | tee -a teste_script.txt
+  date | tee -a teste_script.txt
   echo -e $1 | tee -a teste_script.txt
 }
 
@@ -19,5 +21,13 @@ start_mininet() {
   python myTopology.py
 }
 
+start_controllers() {
+  log 'Conectando aos Controladores'
+  for c in $C1 $C2 
+  do
+    log "Conectando ao $c"
+    ssh $c 'cd Documents; echo hello world from server> testee'
+  done
+}
 
-start_mininet
+start_controllers
