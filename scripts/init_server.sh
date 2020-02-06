@@ -7,9 +7,17 @@ log() {
 
 # iniciar atomix
 start_atomix() {
-  log 'Conectando ao servidor'
+  log 'Iniciando servidor atomix'
   cd ~/Documentos/atomix/
-  ./bin/atomix-agent >log.txt
+  ./bin/atomix-agent > result.txt 2>&1 &
 }
 
-start_atomix
+
+start_mininet() {
+  log 'Iniciando mininet'
+ #cd ~/Documentos/mininet/
+  python myTopology.py
+}
+
+
+start_mininet

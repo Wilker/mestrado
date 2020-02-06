@@ -12,18 +12,18 @@ from subprocess import call
 def myNetwork():
     net = Mininet(topo=None,
                   build=False,
-                  ipBase='192.168.2.0/24')
+                  ipBase='172.18.0.0/16')
 
     info('*** Adding controllers\n')
     c1 = net.addController(name='c1',
                            controller=RemoteController,
-                           ip='192.168.2.11',
+                           ip='172.18.0.4',
                            protocol='tcp',
                            port=6653)
 
     c2 = net.addController(name='c2',
                            controller=RemoteController,
-                           ip='192.168.2.11',
+                           ip='172.18.0.5',
                            protocol='tcp',
                            port=6653)
 
@@ -34,10 +34,10 @@ def myNetwork():
     s4 = net.addSwitch('s4', cls=OVSKernelSwitch)
 
     info('*** Add hosts\n')
-    h1 = net.addHost('h1', cls=Host, ip='192.168.2.10', defaultRoute=None)
-    h2 = net.addHost('h2', cls=Host, ip='192.168.2.11', defaultRoute=None)
-    h3 = net.addHost('h3', cls=Host, ip='192.168.2.12', defaultRoute=None)
-    h4 = net.addHost('h4', cls=Host, ip='192.168.2.13', defaultRoute=None)
+    h1 = net.addHost('h1', cls=Host, ip='172.18.0.10', defaultRoute=None)
+    h2 = net.addHost('h2', cls=Host, ip='172.18.0.11', defaultRoute=None)
+    h3 = net.addHost('h3', cls=Host, ip='172.18.0.12', defaultRoute=None)
+    h4 = net.addHost('h4', cls=Host, ip='172.18.0.13', defaultRoute=None)
 
     info('*** Add links\n')
     net.addLink(h1, s1)
@@ -66,8 +66,8 @@ def myNetwork():
 
     info('*** Post configure switches and hosts\n')
 
-    net.pingAll()
-
+    h1.cmd("tcpreplay -i h1-eth0 -l 100 -p 20 arp-replay.pcapng &")
+#    h1.cmd("wireshark &")
     CLI(net)
     net.stop()
 
