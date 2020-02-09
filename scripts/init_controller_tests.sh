@@ -21,3 +21,7 @@ onos_started_with_error() {
   fi
 }
 
+start_onos() {
+  cd ~/Documents/onos-2.1.0
+  sudo ./bin/onos-service > ../onos.log
+}
