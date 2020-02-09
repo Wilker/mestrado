@@ -12,3 +12,12 @@ is_onos_running() {
     echo 0
   fi
 }
+
+onos_started_with_error() {
+  if [ "$(cat onos.log | grep -c ERROR )" -gt 1 ]; then
+    echo 1
+  else
+    echo 0
+  fi
+}
+
