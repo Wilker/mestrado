@@ -14,7 +14,7 @@ is_onos_running() {
 }
 
 onos_started_with_error() {
-  if [ "$(cat onos.log | grep -c ERROR )" -gt 1 ]; then
+  if [ "$(cat onos.log | grep ERROR | grep -c "onos-core")" -gt 1 ]; then
     echo 1
   else
     echo 0
