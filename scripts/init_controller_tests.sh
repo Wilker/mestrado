@@ -22,6 +22,8 @@ onos_started_with_error() {
 }
 
 start_onos() {
+  log "Entrando na pasta do onos"
   cd ~/Documents/onos-2.1.0
-  sudo ./bin/onos-service > ../onos.log
+  log "Iniciando Onos controller"
+  sudo ./bin/onos-service > ../onos.log &
 }
