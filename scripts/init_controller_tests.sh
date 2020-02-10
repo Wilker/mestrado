@@ -27,3 +27,13 @@ start_onos() {
   log "Iniciando Onos controller"
   sudo ./bin/onos-service > ../onos.log &
 }
+
+execute_test() {
+  log "Iniciando o teste"
+  log "Desabilitando interface de rede"
+  sudo ifconfig enp0s2 down
+  log "Dormindo por 1 minuto"
+  sleep 60
+  log "Habilitando interface de rede"
+  sudo ifconfig enp0s2 up
+}
