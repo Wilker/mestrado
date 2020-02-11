@@ -22,10 +22,21 @@ onos_started_with_error() {
 }
 
 start_onos() {
-  log "Entrando na pasta do onos"
-  cd ~/Documents/onos-2.1.0
-  log "Iniciando Onos controller"
-  sudo ./bin/onos-service > ../onos.log &
+  if [ "$(is_onos_running)" -eq 0 ]; then
+    log "Entrando na pasta do onos"
+    cd ~/Documents/onos-2.1.0
+    log "Iniciando Onos controller"
+    sudo ./bin/onos-service >../onos.log &
+  fi
+  if [ "$(onos_started_with_error)" -eq 1 ]; then
+    #mata o onos
+    sudo pkill java
+    sudo pkill onos
+    sudo killall java
+    sleep 20
+    start_onos
+  fi
+
 }
 
 execute_test() {
