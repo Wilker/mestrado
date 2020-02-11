@@ -44,7 +44,7 @@ execute_test() {
   log "Desabilitando interface de rede"
   sudo ifconfig enp0s2 down
   log "Dormindo por 1 minuto"
-  sleep 60
+  sleep 10
   log "Habilitando interface de rede"
   sudo ifconfig enp0s2 up
 }
@@ -55,9 +55,10 @@ run() {
   if [ "$(hostname)" == "RAV2" ]; then
     sleep 10;
   fi
-  at now + 2 minutes<sudo tcpdump -w $1-$2-`hostname`.pcap;
+  at now + 2 minutes<sudo tcpdump -w $1-$2-`hostname`.pcap
   #for i in $(seq 1 10); do
   #  echo execute_test
   #done
   log "Aqui executaria o teste"
+  at now + 2 minutos<pkill -TERM tcpdump
 }
