@@ -48,3 +48,16 @@ execute_test() {
   log "Habilitando interface de rede"
   sudo ifconfig enp0s2 up
 }
+
+run() {
+  sudo ntpdate taesa-10
+  start_onos
+  if [ "$(hostname)" == "RAV2" ]; then
+    sleep 10;
+  fi
+  at now + 2 minutes<sudo tcpdump -w $1-$2-`hostname`.pcap;
+  #for i in $(seq 1 10); do
+  #  echo execute_test
+  #done
+  log "Aqui executaria o teste"
+}
