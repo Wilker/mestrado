@@ -16,7 +16,7 @@ log(){
 # 1 - ssh no servidor
 
 
-#CMD="ssh wilker@'$C1 ./init_test.sh'"
+#CMD="ssh wilker@'$C1 ./init_server.sh'"
 CMD=ssh wilker@$SERVER whoami
 
 gnome-terminal -e "bash -c
@@ -27,7 +27,7 @@ $CMD;
 exec bash\""
 
 
-# ssh wilker@'$C1 ./init_test.sh'  
+# ssh wilker@'$C1 ./init_server.sh'
 
 
 # 2 - ssh do servidor para o controlador 1

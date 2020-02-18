@@ -17,8 +17,8 @@ start_atomix() {
 
 start_mininet() {
   log 'Iniciando mininet'
- #cd ~/Documentos/mininet/
-  python myTopology.py
+  cd ~/Documentos/mininet/
+  python myTopology.py &
 }
 
 start_controllers() {
@@ -26,8 +26,9 @@ start_controllers() {
   for c in $C1 $C2 
   do
     log "Conectando ao $c"
-    ssh $c 'cd Documents; echo hello world from server> testee'
+    ssh ./$c init_controller_tests.sh
   done
 }
-
+start_atomix
+start_mininet
 start_controllers
