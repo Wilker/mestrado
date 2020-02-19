@@ -14,4 +14,7 @@ log(){
 
 log 'Conectando ao servidor';
 log 'Iniciando testes';
-ssh wilker@'$SERVER' ./init_server.sh
+log 'Conecantando como root';
+ssh -p 2219 wilker@$SERVER 'echo 12345678 |  sudo -S ./init_server.sh'
+log 'Conecatando como host';
+ssh -p 2219 wilker@$SERVER  ./init_server.sh
