@@ -1,6 +1,6 @@
 #!/bin/bash
-C1='192.168.2.11'
-C2='192.168.2.12'
+C1='wilker@192.168.2.11'
+C2='wilker@192.168.2.12'
 
 log() {
   date | tee -a teste_script.txt
@@ -18,17 +18,21 @@ start_atomix() {
 start_mininet() {
   log 'Iniciando mininet'
   cd ~/Documentos/mininet/
-  python myTopology.py &
+  sudo python myTopology.py &
 }
 
 start_controllers() {
   log 'Conectando aos Controladores'
-  for c in $C1 $C2 
+  for c in $C1 $C2
   do
     log "Conectando ao $c"
-    ssh ./$c init_controller_tests.sh
+    ssh $c '12345678 | sudo -S ./init_controller_tests.sh'
   done
 }
-start_atomix
+
+if [ "$(whoami)" == 'root' ]; then
 start_mininet
+else
+start_atomix
 start_controllers
+fi
