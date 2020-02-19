@@ -1,8 +1,8 @@
 #!/bin/bash
 
 log() {
-  date | tee -a teste_script.txt
-  echo -e $1 | tee -a teste_script.txt
+  date | tee -a ~/teste_script.txt
+  echo -e $1 | tee -a ~/teste_script.txt
 }
 
 is_onos_running() {
@@ -50,15 +50,28 @@ execute_test() {
 }
 
 run() {
+  log "eu sou '$(whoami)'"
   sudo ntpdate taesa-10
-  start_onos
   if [ "$(hostname)" == "RAV2" ]; then
     sleep 10;
   fi
-  at now + 2 minutes<sudo tcpdump -w $1-$2-`hostname`.pcap
+  start_onos
+  at now + 1 minutes<<END1
+  sudo tcpdump -w $1-$2-`hostname`.pcap &
   #for i in $(seq 1 10); do
-  #  echo execute_test
+  echo  'iniciando teste' | tee -a ~/teste_script.txt
+  echo "Iniciando o teste" | tee -a ~/teste_script.txt
+  echo"Desabilitando interface de rede" | tee -a ~/teste_script.txt
+  sudo ifconfig enp0s2 down
+  echo "Dormindo por 1 minuto" | tee -a ~/teste_script.txt
+  sleep 10
+  echo "Habilitando interface de rede" | tee -a ~/teste_script.txt
+  sudo ifconfig enp0s2 up
   #done
-  log "Aqui executaria o teste"
-  at now + 2 minutos<pkill -TERM tcpdump
+  echo 'teste executado' | tee -a ~/teste_script.txt
+END1
+  at now + 2 minutes<<END2
+  sudo pkill -TERM tcpdump
+END2
 }
+run
