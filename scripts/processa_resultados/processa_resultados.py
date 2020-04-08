@@ -29,6 +29,7 @@ def process_folder(folder, writable):
     print(os.getcwd())
     master, slave = get_master_and_slave(pcaps)
     base_time = get_time(0, get_last_packet_out(master))
+    switch_port = get_switch_port(master)
     writable.write('{},'.format(get_time(base_time, get_first_role_request(slave))))
     writable.write('{},'.format(get_time(base_time, get_first_role_reply(slave))))
     writable.write('{},'.format(get_time(base_time, get_first_multipart_request(slave))))
@@ -107,6 +108,16 @@ def get_first_packet_out(pcap):
     line = open("{}_packet_out".format(pcap), "r").readline()
     os.remove("{}_packet_out".format(pcap))
     return line
+
+
+def get_switch_port(pcap):
+    cmd = "tshark -2 -r {} -R '{}' -e tcp.srcport -Tfields > {}_packet_out_tcp.srcport".format(pcap, PACKET_IN, pcap)
+    os.system(cmd)
+    with open("{}_packets_out.srcport".format(pcap), "r") as file:
+        last_switch_port = ''
+        for lines in file:
+            last_switch_port = lines
+    return last_switch_port
 
 
 '''Expects tests root folder'''
