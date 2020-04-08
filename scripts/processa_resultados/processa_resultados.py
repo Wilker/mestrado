@@ -19,7 +19,7 @@ def main():
 
 
 def get_time(base_time, line):
-    return round(float(line.split()[1]) - base_time,6)
+    return round(float(line.split()[1]) - base_time, 6)
 
 
 def process_folder(folder, writable):
@@ -30,12 +30,13 @@ def process_folder(folder, writable):
     master, slave = get_master_and_slave(pcaps)
     base_time = get_time(0, get_last_packet_out(master))
     switch_port = get_switch_port(master)
-    writable.write('{},'.format(get_time(base_time, get_first_role_request(slave))))
-    writable.write('{},'.format(get_time(base_time, get_first_role_reply(slave))))
-    writable.write('{},'.format(get_time(base_time, get_first_multipart_request(slave))))
-    writable.write('{},'.format(get_time(base_time, get_first_multipart_reply(slave))))
-    writable.write('{}\n'.format(get_time(base_time, get_first_packet_out(slave))))
+    writable.write('{},'.format(get_time(base_time, get_first_role_request(slave, 0))))
+    writable.write('{},'.format(get_time(base_time, get_first_role_reply(slave, 0))))
+    writable.write('{},'.format(get_time(base_time, get_first_multipart_request(slave, 0, ))))
+    writable.write('{},'.format(get_time(base_time, get_first_multipart_reply(slave, 0))))
+    writable.write('{}\n'.format(get_time(base_time, get_first_packet_out(slave, 0))))
     os.chdir('..')
+
 
 def get_master_and_slave(pcaps):
     master = ''
@@ -70,39 +71,36 @@ def get_last_packet_out(pcap):
     return last_packet
 
 
-def get_first_role_request(pcap):
-    cmd = "tshark -2 -r {} -R '{}' > {}_role_request".format(pcap, ROLE_REQUEST, pcap)
+def get_first(packet_type, pcap, port):
+    file_name = "tmp"
+    cmd = "tshark -2 -r {} -R '{}' > {}".format(pcap, packet_type, file_name)
     os.system(cmd)
-    line = open("{}_role_request".format(pcap), "r").readline()
-    os.remove("{}_role_request".format(pcap))
+    line = open(file_name, "r").readline()
+    os.remove(file_name)
     return line
 
 
-def get_first_role_reply(pcap):
-    cmd = "tshark -2 -r {} -R '{}' > {}_role_reply".format(pcap, ROLE_REPLY, pcap)
-    os.system(cmd)
-    line = open("{}_role_reply".format(pcap), "r").readline()
-    os.remove("{}_role_reply".format(pcap))
-    return line
+def get_first_role_request(pcap, port):
+    return get_first(ROLE_REQUEST, pcap, 0)
 
 
-def get_first_multipart_request(pcap):
-    cmd = "tshark -2 -r {} -R '{}' > {}_multipart_request".format(pcap, MULTIPART_REQUEST, pcap)
-    os.system(cmd)
-    line = open("{}_multipart_request".format(pcap), "r").readline()
-    os.remove("{}_multipart_request".format(pcap))
-    return line
+def get_first_role_reply(pcap, port):
+    return get_first(ROLE_REPLY, pcap, 0)
 
 
-def get_first_multipart_reply(pcap):
-    cmd = "tshark -2 -r {} -R '{}' > {}_multipart_reply".format(pcap, MULTIPART_REPLY, pcap)
-    os.system(cmd)
-    line = open("{}_multipart_reply".format(pcap), "r").readline()
-    os.remove("{}_multipart_reply".format(pcap))
-    return line
+def get_first_multipart_request(pcap, port):
+    return get_first(MULTIPART_REQUEST, pcap, 0)
 
 
-def get_first_packet_out(pcap):
+def get_first_multipart_reply(pcap, port):
+    return get_first(MULTIPART_REPLY, pcap, 0)
+
+
+def get_first_packet_out(pcap, port):
+    return get_first(PACKET_OUT, pcap, 0)
+
+
+def get_syn_packet(pcap, port):
     cmd = "tshark -2 -r {} -R '{}' > {}_packet_out".format(pcap, PACKET_OUT, pcap)
     os.system(cmd)
     line = open("{}_packet_out".format(pcap), "r").readline()
@@ -111,12 +109,14 @@ def get_first_packet_out(pcap):
 
 
 def get_switch_port(pcap):
-    cmd = "tshark -2 -r {} -R '{}' -e tcp.srcport -Tfields > {}_packet_out_tcp.srcport".format(pcap, PACKET_IN, pcap)
+    file_name = "{}_{}".format(pcap, "switch_port")
+    cmd = "tshark -2 -r {} -R '{}' -e tcp.srcport -Tfields > {}".format(pcap, PACKET_IN, file_name)
     os.system(cmd)
-    with open("{}_packets_out.srcport".format(pcap), "r") as file:
+    with open(file_name, "r") as file:
         last_switch_port = ''
         for lines in file:
             last_switch_port = lines
+    os.remove("{}_{}".format(pcap, "switch_port"))
     return last_switch_port
 
 
