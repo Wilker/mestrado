@@ -7,7 +7,7 @@ C2='192.168.2.12'
 # ./bin/client apps
 
 log(){
-    date +%s | tee -a teste_script.txt
+    date | tee -a teste_script.txt
     echo -e $1 | tee -a teste_script.txt
 }
 

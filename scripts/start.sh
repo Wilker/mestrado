@@ -213,7 +213,7 @@ echo "."
 echo "."
 
 CMD="sudo docker exec -it onos1 bash -c \"~/onos/apache-karaf-4.2.3/bin/client\""
-gnome-terminal -e "bash -c 
+gnome-terminal -e "bash -c
 \"echo -e 'Aguardando contêiner docker';
 sleep 60;
 echo -e '$CMD';

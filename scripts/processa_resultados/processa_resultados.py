@@ -19,7 +19,7 @@ def main():
 
 
 def get_time(base_time, line):
-    return round(float(line.split()[1]) - base_time, 6)
+    return round(float(line.split()[0]) - base_time, 6)
 
 
 def process_folder(folder, writable):
@@ -29,12 +29,13 @@ def process_folder(folder, writable):
     print(os.getcwd())
     master, slave = get_master_and_slave(pcaps)
     base_time = get_time(0, get_last_packet_out(master))
-    switch_port = get_switch_port(master)
-    writable.write('{},'.format(get_time(base_time, get_first_role_request(slave, 0))))
-    writable.write('{},'.format(get_time(base_time, get_first_role_reply(slave, 0))))
-    writable.write('{},'.format(get_time(base_time, get_first_multipart_request(slave, 0, ))))
-    writable.write('{},'.format(get_time(base_time, get_first_multipart_reply(slave, 0))))
-    writable.write('{}\n'.format(get_time(base_time, get_first_packet_out(slave, 0))))
+    switch_port = get_switch_port(slave)
+    writable.write('{},'.format(get_time(base_time, get_fist_fin_packet(master))))
+    writable.write('{},'.format(get_time(base_time, get_first_role_request(slave, switch_port))))
+    writable.write('{},'.format(get_time(base_time, get_first_role_reply(slave, switch_port))))
+    writable.write('{},'.format(get_time(base_time, get_first_multipart_request(slave, switch_port))))
+    writable.write('{},'.format(get_time(base_time, get_first_multipart_reply(slave, switch_port))))
+    writable.write('{}\n'.format(get_time(base_time, get_first_packet_out(slave, switch_port))))
     os.chdir('..')
 
 
@@ -61,7 +62,8 @@ def is_master(pcap):
 
 
 def get_last_packet_out(pcap):
-    cmd = "tshark -2 -r {} -R '{}' > {}_packets_out".format(pcap, PACKET_OUT, pcap)
+    cmd = "tshark -2 -r {} -R '{}' -e frame.time_relative -e tcp.srcport -e tcp.dstport -Tfields  > {}_packets_out".format(
+        pcap, PACKET_OUT, pcap)
     os.system(cmd)
     with open("{}_packets_out".format(pcap), "r") as file:
         last_packet = ''
@@ -73,35 +75,52 @@ def get_last_packet_out(pcap):
 
 def get_first(packet_type, pcap, port):
     file_name = "tmp"
-    cmd = "tshark -2 -r {} -R '{}' > {}".format(pcap, packet_type, file_name)
+    cmd = "tshark -2 -r {} -R '{}' -e frame.time_relative -e tcp.srcport -e tcp.dstport -Tfields > {}".format(pcap,
+                                                                                                              packet_type,
+                                                                                                              file_name)
     os.system(cmd)
-    line = open(file_name, "r").readline()
-    os.remove(file_name)
-    return line
+    first_line = ''
+    with open(file_name, "r") as file:
+        for line in file:
+            for split in (line.split()):
+                if split == port:
+                    first_line = line.split()[0]
+                    os.remove(file_name)
+                    return first_line
 
 
 def get_first_role_request(pcap, port):
-    return get_first(ROLE_REQUEST, pcap, 0)
+    return get_first(ROLE_REQUEST, pcap, port)
 
 
 def get_first_role_reply(pcap, port):
-    return get_first(ROLE_REPLY, pcap, 0)
+    return get_first(ROLE_REPLY, pcap, port)
 
 
 def get_first_multipart_request(pcap, port):
-    return get_first(MULTIPART_REQUEST, pcap, 0)
+    return get_first(MULTIPART_REQUEST, pcap, port)
 
 
 def get_first_multipart_reply(pcap, port):
-    return get_first(MULTIPART_REPLY, pcap, 0)
+    return get_first(MULTIPART_REPLY, pcap, port)
 
 
 def get_first_packet_out(pcap, port):
-    return get_first(PACKET_OUT, pcap, 0)
+    return get_first(PACKET_OUT, pcap, port)
 
 
-def get_syn_packet(pcap, port):
-    cmd = "tshark -2 -r {} -R '{}' > {}_packet_out".format(pcap, PACKET_OUT, pcap)
+def get_fist_fin_packet(pcap):
+    cmd = "tshark -2 -r {} -R '(tcp.flags.fin == 1) && tcp.srcport == 6653' -e frame.time_relative -e tcp.srcport -e tcp.dstport -Tfields   > {}_packet_out".format(
+        pcap, pcap)
+    os.system(cmd)
+    line = open("{}_packet_out".format(pcap), "r").readline()
+    os.remove("{}_packet_out".format(pcap))
+    return line
+
+
+def get_first_syn_packe(pcap):
+    cmd = "tshark -2 -r {} -R '(tcp.flags.syn == 1) && tcp.srcport == 6653' -e frame.time_relative -e tcp.srcport -e tcp.dstport -Tfields   > {}_packet_out".format(
+        pcap, pcap)
     os.system(cmd)
     line = open("{}_packet_out".format(pcap), "r").readline()
     os.remove("{}_packet_out".format(pcap))
@@ -110,14 +129,11 @@ def get_syn_packet(pcap, port):
 
 def get_switch_port(pcap):
     file_name = "{}_{}".format(pcap, "switch_port")
-    cmd = "tshark -2 -r {} -R '{}' -e tcp.srcport -Tfields > {}".format(pcap, PACKET_IN, file_name)
+    cmd = "tshark -2 -r {} -R '{}' -e tcp.dstport -Tfields > {}".format(pcap, ROLE_REQUEST, file_name)
     os.system(cmd)
-    with open(file_name, "r") as file:
-        last_switch_port = ''
-        for lines in file:
-            last_switch_port = lines
-    os.remove("{}_{}".format(pcap, "switch_port"))
-    return last_switch_port
+    first_switch_port = open(file_name, "r").readline().rstrip('\n')
+    os.remove(file_name)
+    return first_switch_port
 
 
 '''Expects tests root folder'''
@@ -128,8 +144,14 @@ def extract_results(path_to_folder):
     folder = os.getcwd().split("/")[-1]
     subfolders = [f.path for f in os.scandir('.') if f.is_dir()]
     with open("results-{}-test.csv".format(folder), 'w') as file:
+        file.write('FIN - master')
+        file.write('')
+        file.write('')
+        file.write('')
+        file.write('')
+        file.write('\n')
         for subfolder in subfolders:
-            #file.write(subfolder+'\n')
+            # file.write(subfolder+'\n')
             process_folder(subfolder, file)
     print(get_mean(file.name))
 

@@ -1,0 +1,378 @@
+1582055847
+Conectando ao servidor
+1582055847
+Iniciando testes
+1582056151
+Conectando ao servidor
+1582056152
+Iniciando testes
+1582056470
+Conectando ao servidor
+1582056470
+Iniciando testes
+1582056941
+Conectando ao servidor
+1582056941
+Iniciando testes
+1582057150
+Conectando ao servidor
+1582057150
+Iniciando testes
+1582057880
+Conectando ao servidor
+1582057880
+Iniciando testes
+1582065275
+Conectando ao servidor
+1582065275
+Iniciando testes
+1582065393
+Conectando ao servidor
+1582065393
+Iniciando testes
+1582065444
+Conectando ao servidor
+1582065444
+Iniciando testes
+1582065622
+Conectando ao servidor
+1582065622
+Iniciando testes
+1582065628
+Conectando ao servidor
+1582065628
+Iniciando testes
+1582065788
+Conectando ao servidor
+1582065788
+Iniciando testes
+1582065848
+Conectando ao servidor
+1582065848
+Iniciando testes
+1582065932
+Conectando ao servidor
+1582065932
+Iniciando testes
+1582065938
+Conectando ao servidor
+1582065938
+Iniciando testes
+1582066028
+Conectando ao servidor
+1582066028
+Iniciando testes
+1582066057
+Conectando ao servidor
+1582066057
+Iniciando testes
+1582066084
+Conectando ao servidor
+1582066084
+Iniciando testes
+1582066089
+Conectando ao servidor
+1582066089
+Iniciando testes
+1582066098
+Conectando ao servidor
+1582066098
+Iniciando testes
+1582066160
+Conectando ao servidor
+1582066160
+Iniciando testes
+1582066448
+Conectando ao servidor
+1582066448
+Iniciando testes
+1582066474
+Conectando ao servidor
+1582066474
+Iniciando testes
+1582066900
+Conectando ao servidor
+1582066900
+Iniciando testes
+1582067005
+Conectando ao servidor
+1582067005
+Iniciando testes
+1582067124
+Conectando ao servidor
+1582067124
+Iniciando testes
+1582067124
+Conecantando como root
+1582067134
+Conecatando como host
+1582067246
+Conectando ao servidor
+1582067246
+Iniciando testes
+1582067246
+Conecantando como root
+1582067257
+Conecatando como host
+1582067301
+Conectando ao servidor
+1582067301
+Iniciando testes
+1582067301
+Conecantando como root
+1582067311
+Conecatando como host
+1582067417
+Conectando ao servidor
+1582067417
+Iniciando testes
+1582067417
+Conecantando como root
+1582067423
+Conecatando como host
+1582068144
+Conectando ao servidor
+1582068144
+Iniciando testes
+1582068144
+Conecantando como root
+1582068146
+Conecatando como host
+1582068342
+Conectando ao servidor
+1582068342
+Iniciando testes
+1582068342
+Conecantando como root
+1582068342
+Conecatando como host
+1582068349
+Conectando ao servidor
+1582068349
+Iniciando testes
+1582068349
+Conecantando como root
+1582068351
+Conecatando como host
+1582068493
+Conectando ao servidor
+1582068493
+Iniciando testes
+1582068493
+Conecantando como root
+1582068494
+Conecatando como host
+1582068810
+Conectando ao servidor
+1582068810
+Iniciando testes
+1582068810
+Conecantando como root
+1582068812
+Conecatando como host
+1582069316
+Conectando ao servidor
+1582069316
+Iniciando testes
+1582069316
+Conecantando como root
+1582069318
+Conecatando como host
+1582069517
+Conectando ao servidor
+1582069517
+Iniciando testes
+1582069517
+Conecantando como root
+1582069519
+Conecatando como host
+1582069960
+Conectando ao servidor
+1582069960
+Iniciando testes
+1582069960
+Conecantando como root
+1582069962
+Conecatando como host
+1582070467
+Conectando ao servidor
+1582070467
+Iniciando testes
+1582070467
+Conecantando como root
+1582070469
+Conecatando como host
+1582070743
+Conectando ao servidor
+1582070743
+Iniciando testes
+1582070743
+Conecantando como root
+1582070745
+Conecatando como host
+1582070957
+Conectando ao servidor
+1582070957
+Iniciando testes
+1582070957
+Conecantando como root
+1582070959
+Conecatando como host
+1582071044
+Conectando ao servidor
+1582071044
+Iniciando testes
+1582071044
+Conecantando como root
+1582071047
+Conecatando como host
+1582071145
+Conectando ao servidor
+1582071145
+Iniciando testes
+1582071145
+Conecantando como root
+1582071148
+Conecatando como host
+1582071429
+Conectando ao servidor
+1582071429
+Iniciando testes
+1582071429
+Conecantando como root
+1582071431
+Conecatando como host
+1582072726
+Conectando ao servidor
+1582072726
+Iniciando testes
+1582072726
+Conecantando como root
+1582072729
+Conecatando como host
+1582072900
+Conectando ao servidor
+1582072900
+Iniciando testes
+1582072900
+Conecantando como root
+1582072903
+Conecatando como host
+1582073619
+Conectando ao servidor
+1582073619
+Iniciando testes
+1582073619
+Conecantando como root
+1582073621
+Conecatando como host
+1582073750
+Conectando ao servidor
+1582073750
+Iniciando testes
+1582073750
+Conecantando como root
+1582073751
+Conecatando como host
+1582073915
+Conectando ao servidor
+1582073915
+Iniciando testes
+1582073915
+Conecantando como root
+1582073916
+Conecatando como host
+1584041119
+Conectando ao servidor
+1584041119
+Iniciando testes
+1584041119
+Conecantando como root
+1584041142
+Conecatando como host
+1584043603
+Conectando ao servidor
+1584043603
+Iniciando testes
+1584043603
+Conecantando como root
+1584043918
+Conectando ao servidor
+1584043918
+Iniciando testes
+1584043918
+Conecantando como root
+1584043920
+Conecatando como host
+1584044276
+Conectando ao servidor
+1584044276
+Iniciando testes
+1584044276
+Conecantando como root
+1584044279
+Conecatando como host
+1584045307
+Conectando ao servidor
+1584045307
+Iniciando testes
+1584045307
+Conecantando como root
+1584045310
+Conecatando como host
+1584045371
+Conectando ao servidor
+1584045371
+Iniciando testes
+1584045371
+Conecantando como root
+1584045373
+Conecatando como host
+Qui 12 Mar 2020 17:38:51 -03
+Conectando ao servidor
+Qui 12 Mar 2020 17:38:51 -03
+Iniciando testes
+Qui 12 Mar 2020 17:38:51 -03
+Conecantando como root
+Qui 12 Mar 2020 17:38:54 -03
+Conecatando como host
+Qui 12 Mar 2020 17:39:20 -03
+Conectando ao servidor
+Qui 12 Mar 2020 17:39:20 -03
+Iniciando testes
+Qui 12 Mar 2020 17:39:20 -03
+Conecantando como root
+Qui 12 Mar 2020 17:39:22 -03
+Conecatando como host
+Qui 12 Mar 2020 17:42:27 -03
+Conectando ao servidor
+Qui 12 Mar 2020 17:42:27 -03
+Iniciando testes
+Qui 12 Mar 2020 17:42:27 -03
+Conecantando como root
+Qui 12 Mar 2020 17:42:29 -03
+Conecatando como host
+Qui 12 Mar 2020 17:44:25 -03
+Conectando ao servidor
+Qui 12 Mar 2020 17:44:25 -03
+Iniciando testes
+Qui 12 Mar 2020 17:44:25 -03
+Conecantando como root
+Qui 12 Mar 2020 17:44:28 -03
+Conecatando como host
+Qui 12 Mar 2020 17:45:12 -03
+Conectando ao servidor
+Qui 12 Mar 2020 17:45:12 -03
+Iniciando testes
+Qui 12 Mar 2020 17:45:12 -03
+Conecantando como root
+Qui 12 Mar 2020 17:45:14 -03
+Conecatando como host
+Qui 12 Mar 2020 17:53:05 -03
+Conectando ao servidor
+Qui 12 Mar 2020 17:53:05 -03
+Iniciando testes
+Qui 12 Mar 2020 17:53:05 -03
+Conecantando como root
+Qui 12 Mar 2020 17:53:08 -03
+Conecatando como host
