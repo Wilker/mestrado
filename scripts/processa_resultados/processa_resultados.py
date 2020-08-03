@@ -8,6 +8,7 @@ ROLE_REQUEST = '(openflow_v5.type == 24)'
 ROLE_REPLY = '(openflow_v5.type == 25)'
 MULTIPART_REQUEST = '(openflow_v5.type == 18)'
 MULTIPART_REPLY = '(openflow_v5.type == 19)'
+FILE_NAME = "tmp"
 
 
 def main():
@@ -30,12 +31,16 @@ def process_folder(folder, writable):
     master, slave = get_master_and_slave(pcaps)
     base_time = get_time(0, get_last_packet_out(master))
     switch_port = get_switch_port(slave)
+    multipartcount = get_multi_part_count(slave, MULTIPART_REPLY, get_first_role_reply(slave, switch_port),
+                              get_first_packet_out(slave, switch_port),switch_port)
+    writable.write('{},'.format(folder[-2::]))
     writable.write('{},'.format(get_time(base_time, get_fist_fin_packet(master))))
     writable.write('{},'.format(get_time(base_time, get_first_role_request(slave, switch_port))))
     writable.write('{},'.format(get_time(base_time, get_first_role_reply(slave, switch_port))))
     writable.write('{},'.format(get_time(base_time, get_first_multipart_request(slave, switch_port))))
     writable.write('{},'.format(get_time(base_time, get_first_multipart_reply(slave, switch_port))))
-    writable.write('{}\n'.format(get_time(base_time, get_first_packet_out(slave, switch_port))))
+    writable.write('{},'.format(get_time(base_time, get_first_packet_out(slave, switch_port))))
+    writable.write('{}\n'.format(multipartcount))
     os.chdir('..')
 
 
@@ -51,33 +56,33 @@ def get_master_and_slave(pcaps):
 
 
 def is_master(pcap):
-    cmd = "tshark -2 -r {} -R '{}' > {}_master_test".format(pcap, ROLE_REQUEST, pcap)
+    cmd = "tshark -2 -r {} -R '{}' > {}".format(pcap, ROLE_REQUEST, FILE_NAME)
     os.system(cmd)
-    with open("{}_master_test".format(pcap), "r") as file:
+    with open(FILE_NAME, "r") as file:
         total_lines = 0
         for lines in file:
             total_lines += 1
-    os.remove("{}_master_test".format(pcap))
+    os.remove(FILE_NAME)
     return False if total_lines > 0 else True
 
 
 def get_last_packet_out(pcap):
-    cmd = "tshark -2 -r {} -R '{}' -e frame.time_relative -e tcp.srcport -e tcp.dstport -Tfields  > {}_packets_out".format(
-        pcap, PACKET_OUT, pcap)
+    cmd = "tshark -2 -r {} -R '{}' -e frame.time_epoch -e tcp.srcport -e tcp.dstport -Tfields  > {}".format(
+        pcap, PACKET_OUT, FILE_NAME)
     os.system(cmd)
-    with open("{}_packets_out".format(pcap), "r") as file:
+    with open(FILE_NAME, "r") as file:
         last_packet = ''
         for lines in file:
             last_packet = lines
-    os.remove("{}_packets_out".format(pcap))
+    os.remove(FILE_NAME)
     return last_packet
 
 
 def get_first(packet_type, pcap, port):
     file_name = "tmp"
-    cmd = "tshark -2 -r {} -R '{}' -e frame.time_relative -e tcp.srcport -e tcp.dstport -Tfields > {}".format(pcap,
+    cmd = "tshark -2 -r {} -R '{}' -e frame.time_epoch -e tcp.srcport -e tcp.dstport -Tfields > {}".format(pcap,
                                                                                                               packet_type,
-                                                                                                              file_name)
+                                                                                                              FILE_NAME)
     os.system(cmd)
     first_line = ''
     with open(file_name, "r") as file:
@@ -110,20 +115,20 @@ def get_first_packet_out(pcap, port):
 
 
 def get_fist_fin_packet(pcap):
-    cmd = "tshark -2 -r {} -R '(tcp.flags.fin == 1) && tcp.srcport == 6653' -e frame.time_relative -e tcp.srcport -e tcp.dstport -Tfields   > {}_packet_out".format(
-        pcap, pcap)
+    cmd = "tshark -2 -r {} -R '(tcp.flags.fin == 1) && tcp.srcport == 6653' -e frame.time_epoch -e tcp.srcport -e tcp.dstport -Tfields   > {}".format(
+        pcap, FILE_NAME)
     os.system(cmd)
-    line = open("{}_packet_out".format(pcap), "r").readline()
-    os.remove("{}_packet_out".format(pcap))
+    line = open(FILE_NAME, "r").readline()
+    os.remove(FILE_NAME)
     return line
 
 
 def get_first_syn_packe(pcap):
-    cmd = "tshark -2 -r {} -R '(tcp.flags.syn == 1) && tcp.srcport == 6653' -e frame.time_relative -e tcp.srcport -e tcp.dstport -Tfields   > {}_packet_out".format(
-        pcap, pcap)
+    cmd = "tshark -2 -r {} -R '(tcp.flags.syn == 1) && tcp.srcport == 6653' -e frame.time_epoch -e tcp.srcport -e tcp.dstport -Tfields   > {}".format(
+        pcap, FILE_NAME)
     os.system(cmd)
-    line = open("{}_packet_out".format(pcap), "r").readline()
-    os.remove("{}_packet_out".format(pcap))
+    line = open(FILE_NAME, "r").readline()
+    os.remove(FILE_NAME)
     return line
 
 
@@ -136,6 +141,19 @@ def get_switch_port(pcap):
     return first_switch_port
 
 
+def get_multi_part_count(pcap, packet_type, time_init, time_end, switch_port):
+    cmd = "tshark -2 -r {} -R '{}' -e frame.time_epoch -e tcp.srcport -e tcp.dstport -Tfields  > {}" \
+        .format(pcap, packet_type, FILE_NAME)
+    os.system(cmd)
+    count = 0
+    with open(FILE_NAME, "r") as file:
+        for line in file:
+            if (float(line.split()[0]) > float(time_init)) and (float(line.split()[0]) < float(time_end)) and (switch_port ==line.split()[1]):
+                count += 1
+    os.remove(FILE_NAME)
+    return count
+
+
 '''Expects tests root folder'''
 
 
@@ -144,16 +162,19 @@ def extract_results(path_to_folder):
     folder = os.getcwd().split("/")[-1]
     subfolders = [f.path for f in os.scandir('.') if f.is_dir()]
     with open("results-{}-test.csv".format(folder), 'w') as file:
-        file.write('FIN - master')
-        file.write('')
-        file.write('')
-        file.write('')
-        file.write('')
-        file.write('\n')
+        file.write('FOLDER,')
+        file.write('FIN,')
+        file.write('ROLE REQUEST,')
+        file.write('ROLE REPLY,')
+        file.write('MULTIPART REQUEST,')
+        file.write('MULTIPART REPLY,')
+        file.write('PACKET OUT,')
+        file.write('MULTIPART COUNT\n')
+
         for subfolder in subfolders:
             # file.write(subfolder+'\n')
             process_folder(subfolder, file)
-    print(get_mean(file.name))
+    # (get_mean(file.name))
 
 
 def get_mean(file):
