@@ -20,6 +20,8 @@ def main():
 
 
 def get_time(base_time, line):
+    if line == '':
+        return 'x'
     return round(float(line.split()[0]) - base_time, 6)
 
 
