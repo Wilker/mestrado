@@ -131,16 +131,24 @@ do
   exec bash\""
 done
 
-echo "Executando intâncias de cluster ONOS"
-for i in $(seq 1 $1)
-do
-  CMD="sudo docker run -it --net rede-onos --ip 172.18.0.`expr $i + $1 + 1` --name onos$i --hostname onos-$i -v $DIR/.config/onos-$i.json:/root/onos/config/cluster.json -v $DIR/.log/$LOG_DIR/onos-$i/:/root/onos/apache-karaf-4.2.3/data/log/ onosproject/onos:2.1.0"
+#echo "Executando intâncias de cluster ONOS"
+#for i in $(seq 1 $1)
+#do
+#  CMD="sudo docker run -it --net rede-onos --ip 172.18.0.`expr $i + $1 + 1` --name onos$i --hostname onos-$i -v $DIR/.config/onos-$i.json:/root/onos/config/cluster.json -v $DIR/.log/$LOG_DIR/onos-$i/:/root/onos/apache-karaf-4.2.3/data/log/ onosproject/onos:2.1.0"
+#  gnome-terminal -e "bash -c
+#  \"sudo docker rm onos$i;
+#  echo -e '$CMD';
+#  $CMD;
+#  exec bash\""
+#done
+
+echo "Executando intância de cluster ONOS1"
+  CMD="sudo docker run -it --net rede-onos --ip 172.18.0.`expr 1 + $1 + 1` --name onos1 --hostname onos-1 -v $DIR/.config/onos-1.json:/root/onos/config/cluster.json -v $DIR/.log/$LOG_DIR/onos-1/:/root/onos/apache-karaf-4.2.3/data/log/ onosproject/onos:2.1.0"
   gnome-terminal -e "bash -c
-  \"sudo docker rm onos$i;
+  \"sudo docker rm onos1;
   echo -e '$CMD';
   $CMD;
   exec bash\""
-done
 
 echo "Criando script mininet"
 echo "."
@@ -238,13 +246,26 @@ echo "."
 echo "."
 echo "."
 
-CMD="sudo docker exec -it onos1 bash -c '~/onos/apache-karaf-4.2.3/bin/client'"
+CMD="sudo docker exec -it onos1 bash -c '~/onos/apache-karaf-4.2.3/bin/client app activate org.onosproject.openflow'"
 gnome-terminal -e "bash -c
 \"echo -e 'Aguardando contêiner docker';
-sleep 60;
+sleep 30;
 echo -e '$CMD';
 $CMD;
 exec bash\""
+
+
+echo "Executando intâncias de cluster ONOS"
+for i in $(seq 2 $1)
+do
+  CMD="sudo docker run -it --net rede-onos --ip 172.18.0.`expr $i + $1 + 1` --name onos$i --hostname onos-$i -v $DIR/.config/onos-$i.json:/root/onos/config/cluster.json -v $DIR/.log/$LOG_DIR/onos-$i/:/root/onos/apache-karaf-4.2.3/data/log/ onosproject/onos:2.1.0"
+  gnome-terminal -e "bash -c
+  \"sudo docker rm onos$i;
+  sleep 35;
+  echo -e '$CMD';
+  $CMD;
+  exec bash\""
+done
 
 echo "Iniciando Mininet"
 echo "."
