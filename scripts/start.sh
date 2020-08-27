@@ -10,6 +10,7 @@ echo '.'
 echo '.'
 echo '.'
 VAR=""
+
 for i in $(seq 1 $1)
 do
   VAR=""
@@ -93,12 +94,37 @@ echo "Deixando o diretório de arquivos de configuração"
 cd "../"
 DIR=`pwd`
 echo $DIR
+
+echo 'Criando diretórios para arquivos de log'
+DIR="./.log"
+mkdir -p $DIR
+echo 'Entrando diretório de arquivos de log'
+cd $DIR
+echo `pwd`
+DIR="$(date '+%H-%M-%S')"
+LOG_DIR=$DIR
+
+echo 'Criando diretório de log '$DIR''
+mkdir -p $DIR
+echo 'Entrando no diretório de log'
+cd $DIR
+echo `pwd`
+echo 'Criando subdiretórios de log'
+for i in $(seq 1 $1)
+do
+  mkdir -p "onos-$i"
+done
+
+echo "Deixando o diretório de arquivos de log"
+cd "../../"
+DIR=`pwd`
+echo $DIR
 echo "Executando intâncias de cluster Atomix"
 
 for i in $(seq 1 $1)
-do 
+do
   CMD="sudo docker run -it --net rede-onos --ip 172.18.0.`expr $i + 1` --name atomix$i --hostname atomix-$i -v $DIR/.config/atomix-$i.conf:/etc/atomix/conf/atomix.conf atomix/atomix:3.1.0 --config /etc/atomix/conf/atomix.conf --ignore-resources"
-  gnome-terminal -e "bash -c 
+  gnome-terminal -e "bash -c
   \"sudo docker rm atomix$i;
   echo -e '$CMD';
   $CMD;
@@ -107,9 +133,9 @@ done
 
 echo "Executando intâncias de cluster ONOS"
 for i in $(seq 1 $1)
-do 
-  CMD="sudo docker run -it --net rede-onos --ip 172.18.0.`expr $i + $1 + 1` --name onos$i --hostname onos-$i -v $DIR/.config/onos-$i.json:/root/onos/config/cluster.json onosproject/onos:2.1.0"
-  gnome-terminal -e "bash -c 
+do
+  CMD="sudo docker run -it --net rede-onos --ip 172.18.0.`expr $i + $1 + 1` --name onos$i --hostname onos-$i -v $DIR/.config/onos-$i.json:/root/onos/config/cluster.json -v $DIR/.log/$LOG_DIR/onos-$i/:/root/onos/apache-karaf-4.2.3/data/log/ onosproject/onos:2.1.0"
+  gnome-terminal -e "bash -c
   \"sudo docker rm onos$i;
   echo -e '$CMD';
   $CMD;
@@ -153,7 +179,7 @@ def myNetwork():
   do
     CONTROLLERS=$CONTROLLERS"c$i"
     if [ $i -lt $1 ]
-    then 
+    then
       CONTROLLERS=$CONTROLLERS","
     fi
   done
@@ -177,10 +203,10 @@ def myNetwork():
 
     net.addLink(s1, s2)
     net.addLink(s1, s3)
-    
+
     net.addLink(s2, s4)
     net.addLink(s3, s4)
-    
+
     info( '*** Starting network\n')
     net.build()
     info( '*** Starting controllers\n')
@@ -198,7 +224,7 @@ def myNetwork():
     info( '*** Post configure switches and hosts\n')
 
     net.pingAll()
-    
+
     CLI(net)
     net.stop()
 
@@ -212,7 +238,7 @@ echo "."
 echo "."
 echo "."
 
-CMD="sudo docker exec -it onos1 bash -c \"~/onos/apache-karaf-4.2.3/bin/client\""
+CMD="sudo docker exec -it onos1 bash -c '~/onos/apache-karaf-4.2.3/bin/client'"
 gnome-terminal -e "bash -c
 \"echo -e 'Aguardando contêiner docker';
 sleep 60;
