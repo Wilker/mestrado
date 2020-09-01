@@ -150,6 +150,14 @@ echo "Executando intância de cluster ONOS1"
   $CMD;
   exec bash\""
 
+
+CMD="./start_capturas.sh onos1 3"
+gnome-terminal -e "bash -c
+\"echo -e 'Iniciando captura';
+echo -e '$CMD';
+$CMD;
+exec bash\""
+
 echo "Criando script mininet"
 echo "."
 echo "."
@@ -267,9 +275,15 @@ do
   exec bash\""
 done
 
+CMD="./start_capturas.sh onos2 38"
+gnome-terminal -e "bash -c
+\"echo -e 'Iniciando captura';
+echo -e '$CMD';
+$CMD;
+exec bash\""
+
 echo "Iniciando Mininet"
 echo "."
 echo "."
 echo "."
 sudo python myTopology.py
-
