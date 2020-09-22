@@ -13,6 +13,6 @@ for container in $(docker ps -q); do
     echo $name
     if [[ $name == *"$container_name"* ]]; then
         echo "Iniciando captura em $1"
-        sudo tcpdump -i $veth -w ~/Documents/git/mestrado/scripts/$(date '+%H-%M-%S')-$name.pcap
+        sudo tcpdump -i $veth -w `pwd`/$(date '+%H-%M-%S')-$name.pcap
      fi
 done

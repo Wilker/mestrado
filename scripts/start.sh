@@ -11,7 +11,10 @@ echo '.'
 echo '.'
 VAR=""
 
-for i in $(seq 1 $1)
+ATOMIX_INSTANCE_COUNTER=3
+ONOS_INSTANCE_COUNTER=$1
+
+for i in $(seq 1 $ATOMIX_INSTANCE_COUNTER)
 do
   VAR=""
       echo "cluster {
@@ -25,9 +28,9 @@ do
 
   VAR="${VAR}biscoito-1"
 
-  for j in $(seq 1 $1)
-  do 
-      if [ $1 -gt 1 ] && [ $j -lt `expr $1` ]
+  for j in $(seq 1 $ATOMIX_INSTANCE_COUNTER)
+  do
+      if [ $1 -gt 1 ] && [ $j -lt `expr $ATOMIX_INSTANCE_COUNTER` ]
       then
               VAR="${VAR},biscoito-`expr $j + 1`"
       fi
@@ -37,7 +40,7 @@ do
       }" >> "atomix-$i.conf"
   done
 
-  VAR="${VAR%"${VAR##*[![:space:]]}"}"   
+  VAR="${VAR%"${VAR##*[![:space:]]}"}"
 
   echo "  }
   }" >> "atomix-$i.conf"
@@ -48,7 +51,7 @@ do
     storage.level: disk
     members: [$VAR]
   }
-  
+
   partition-groups.raft {
     type: raft
     partitions: 1
@@ -62,24 +65,24 @@ echo '.'
 echo '.'
 echo '.'
 
-for i in $(seq 1 $1)
+for i in $(seq 1 $ONOS_INSTANCE_COUNTER)
 do
   echo "{
   \"name\": \"onos\",
   \"node\": {
     \"id\": \"onos-$i\",
-    \"ip\": \"172.18.0.`expr $i + $1 + 1`\",
+    \"ip\": \"172.18.0.`expr $i + $ATOMIX_INSTANCE_COUNTER + 1`\",
     \"port\": 9876
   },
   \"storage\": [" > "onos-$i.json"
-    for j in $(seq 1 $1)
+    for j in $(seq 1 $ATOMIX_INSTANCE_COUNTER)
     do
     echo "    {
       \"id\": \"biscoito-$j\",
       \"ip\": \"172.18.0.`expr $j + 1`\",
       \"port\": \"5679\"" >> "onos-$i.json"
-  
-    if [ $j -lt $1 ]
+
+    if [ $j -lt $ATOMIX_INSTANCE_COUNTER ]
     then
     echo "    }," >> "onos-$i.json"
     else
@@ -121,7 +124,7 @@ DIR=`pwd`
 echo $DIR
 echo "Executando intâncias de cluster Atomix"
 
-for i in $(seq 1 $1)
+for i in $(seq 1 $ATOMIX_INSTANCE_COUNTER)
 do
   CMD="sudo docker run -it --net rede-onos --ip 172.18.0.`expr $i + 1` --name atomix$i --hostname atomix-$i -v $DIR/.config/atomix-$i.conf:/etc/atomix/conf/atomix.conf atomix/atomix:3.1.0 --config /etc/atomix/conf/atomix.conf --ignore-resources"
   gnome-terminal -e "bash -c
@@ -143,7 +146,7 @@ done
 #done
 
 echo "Executando intância de cluster ONOS1"
-  CMD="sudo docker run -it --net rede-onos --ip 172.18.0.`expr 1 + $1 + 1` --name onos1 --hostname onos-1 -v $DIR/.config/onos-1.json:/root/onos/config/cluster.json -v $DIR/.log/$LOG_DIR/onos-1/:/root/onos/apache-karaf-4.2.3/data/log/ onosproject/onos:2.1.0"
+  CMD="sudo docker run -it --net rede-onos --ip 172.18.0.`expr 1 + $ATOMIX_INSTANCE_COUNTER + 1` --name onos1 --hostname onos-1 -v $DIR/.config/onos-1.json:/root/onos/config/cluster.json -v $DIR/.log/$LOG_DIR/onos-1/:/root/onos/apache-karaf-4.2.3/data/log/ onosproject/onos:2.1.0"
   gnome-terminal -e "bash -c
   \"sudo docker rm onos1;
   echo -e '$CMD';
@@ -151,7 +154,7 @@ echo "Executando intância de cluster ONOS1"
   exec bash\""
 
 
-CMD="./start_capturas.sh onos1 3"
+CMD="./start_capturas.sh onos1 6"
 gnome-terminal -e "bash -c
 \"echo -e 'Iniciando captura';
 echo -e '$CMD';
@@ -184,7 +187,7 @@ def myNetwork():
   do
   echo "    c$i=net.addController(name='c$i',
                       controller=RemoteController,
-                      ip='172.18.0.`expr $i + $1 + 1`',
+                      ip='172.18.0.`expr $i + $ATOMIX_INSTANCE_COUNTER + 1`',
                       protocol='tcp',
                       port=6653)
   " >> myTopology.py
@@ -266,7 +269,7 @@ exec bash\""
 echo "Executando intâncias de cluster ONOS"
 for i in $(seq 2 $1)
 do
-  CMD="sudo docker run -it --net rede-onos --ip 172.18.0.`expr $i + $1 + 1` --name onos$i --hostname onos-$i -v $DIR/.config/onos-$i.json:/root/onos/config/cluster.json -v $DIR/.log/$LOG_DIR/onos-$i/:/root/onos/apache-karaf-4.2.3/data/log/ onosproject/onos:2.1.0"
+  CMD="sudo docker run -it --net rede-onos --ip 172.18.0.`expr $i + $ATOMIX_INSTANCE_COUNTER + 1` --name onos$i --hostname onos-$i -v $DIR/.config/onos-$i.json:/root/onos/config/cluster.json -v $DIR/.log/$LOG_DIR/onos-$i/:/root/onos/apache-karaf-4.2.3/data/log/ onosproject/onos:2.1.0"
   gnome-terminal -e "bash -c
   \"sudo docker rm onos$i;
   sleep 35;
